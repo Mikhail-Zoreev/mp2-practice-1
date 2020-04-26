@@ -141,6 +141,14 @@
   <ItemGroup>
     <ClCompile Include="..\..\sample\main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\HashTable.h" />
+    <ClInclude Include="..\..\include\SearchTree.h" />
+    <ClInclude Include="..\..\include\SearchTreeTable.h" />
+    <ClInclude Include="..\..\include\SortedTable.h" />
+    <ClInclude Include="..\..\include\Table.h" />
+    <ClInclude Include="..\..\include\UnorderedTable.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
