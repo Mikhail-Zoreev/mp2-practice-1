@@ -1,18 +1,20 @@
 #include "Table.h"
 
 template <typename TKey, typename TData>
-class UnsortedTable : public Table<TKey, TData>
+class UnorderedTable : public Table<TKey, TData>
 {
 protected:
     TableRecord* records;
 
 public:
-    UnsortedTable(size_t size_);
+    UnorderedTable(size_t size_);
+    UnorderedTable(const UnorderedTable<TKey, TData>& temp);
+    ~UnorderedTable();
 
     //Операции с таблицей
     virtual TableRecord<TKey, TData>* find(TKey key) const;
     virtual void insert(TKey key, TData* data);
-    virtual void Remove(TKey key) = 0;
+    virtual void remove(TKey key);
 
     //Пермещение по таблице
     virtual bool reset();
@@ -21,7 +23,7 @@ public:
 };
 
 template <typename TKey, typename TData>
-UnsortedTable<TKey, TData>::UnsortedTable(size_t size_)
+UnorderedTable<TKey, TData>::UnorderedTable(size_t size_)
 {
     size = size_;
     count = 0;
@@ -29,7 +31,27 @@ UnsortedTable<TKey, TData>::UnsortedTable(size_t size_)
 }
 
 template <typename TKey, typename TData>
-TableRecord<TKey, TData>* UnsortedTable<TKey, TData>::find(TKey key) const
+UnorderedTable<TKey, TData>::UnorderedTable(const UnorderedTable<TKey, TData>& temp)
+{
+    size = temp.size_;
+    count = temp.count;
+    records = new TableRecord[size];
+    for (size_t i = 0; i < count; i++)
+    {
+        records[i] = temp.records[i];
+    }
+}
+
+template <typename TKey, typename TData>
+UnorderedTable<TKey, TData>::~UnorderedTable()
+{
+    size = 0;
+    count = 0;
+    if (records != nullptr) delete[] records;
+}
+
+template <typename TKey, typename TData>
+TableRecord<TKey, TData>* UnorderedTable<TKey, TData>::find(TKey key) const
 {
     for (size_t i = 0; i < countl i++)
     {
@@ -39,7 +61,7 @@ TableRecord<TKey, TData>* UnsortedTable<TKey, TData>::find(TKey key) const
 }
 
 template <typename TKey, typename TData>
-void UnsortedTable<TKey, TData>::insert(TKey key, TData* data)
+void UnorderedTable<TKey, TData>::insert(TKey key, TData* data)
 {
     if (full()) throw "FULL";
     elements[count] = TableRecord(key, data);
@@ -47,7 +69,7 @@ void UnsortedTable<TKey, TData>::insert(TKey key, TData* data)
 }
 
 template <typename TKey, typename TData>
-void UnsortedTable<TKey, TData>::Remove(TKey key)
+void UnorderedTable<TKey, TData>::remove(TKey key)
 {
     TableRecord* temp = find(key);
     if (temp)
@@ -58,21 +80,21 @@ void UnsortedTable<TKey, TData>::Remove(TKey key)
 }
 
 template <typename TKey, typename TData>
-bool UnsortedTable<TKey, TData>::reset()
+bool UnorderedTable<TKey, TData>::reset()
 {
     current = elements;
     return isEnded();
 }
 
 template <typename TKey, typename TData>
-bool UnsortedTable<TKey, TData>::next()
+bool UnorderedTable<TKey, TData>::next()
 {
     if (!isEnded()) current++;
     return isEnded();
 }
 
 template <typename TKey, typename TData>
-bool UnsortedTable<TKey, TData>::isEnded()
+bool UnorderedTable<TKey, TData>::isEnded()
 {
     return (current - elements + 1) == count;
 }

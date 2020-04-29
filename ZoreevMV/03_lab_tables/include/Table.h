@@ -8,6 +8,7 @@ struct TableRecord
 
     TableRecord(TKey key_, TData* data_);
     TableRecord(TKey key_, TData& data_);
+    TableRecord(const TableRecord<TKey, TData>& temp);
     ~TableRecord();
 
     TableRecord<TKey, TData>& operator=(const TableRecord<TKey, TData> temp);
@@ -32,7 +33,7 @@ public:
     //Операции с таблицей
     virtual TableRecord<TKey, TData>* find(TKey key) = 0 const;
     virtual void insert(TKey key, TData* data) = 0;
-    virtual void Remove(TKey key) = 0;
+    virtual void remove(TKey key) = 0;
 
     //Пермещение по таблице
     virtual bool reset() = 0;
@@ -62,6 +63,13 @@ TableRecord<TKey, TData>::TableRecord<TKey, TData>(TKey key_, TData& data_)
 {
     key = key_;
     data = new TData(data_);
+}
+
+template<typename TKey, typename TData>
+TableRecord<TKey, TData>::TableRecord(const TableRecord<TKey, TData>& temp)
+{
+    key = temp.key_;
+    data = new TData(temp.data_);
 }
 
 template<typename TKey, typename TData>
