@@ -4,7 +4,7 @@ template <typename TKey, typename TData>
 class UnorderedTable : public Table<TKey, TData>
 {
 protected:
-    TableRecord* records;
+    TableRecord* records; //TODO: заменить на **
 
 public:
     UnorderedTable(size_t size_);

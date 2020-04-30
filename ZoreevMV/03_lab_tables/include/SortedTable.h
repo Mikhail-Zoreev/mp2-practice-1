@@ -12,7 +12,7 @@ public:
     virtual void insert(TKey key, TData* data); //TODO: Сделать без сортировки
     virtual void remove(TKey key);              //TODO: Сделать без сортировки
 
-private:
+protected:
     void sort();
 };
 
