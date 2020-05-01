@@ -39,6 +39,7 @@ HashTable<TKey, TData>::HashTable(size_t size_)
 {
     this->size = size_;
     this->count = 0;
+    current = 0;
     records = new TableRecord<TKey, TData>*[size_];
     for (size_t i = 0; i < this->size; i++)
     {
@@ -116,8 +117,9 @@ void HashTable<TKey, TData>::remove(TKey key)
     TableRecord<TKey, TData>* temp = find(key);
     if (temp != nullptr)
     {
-        delete temp;
-        temp = new TableRecord<TKey, TData>(TECH_KEY, nullptr);
+        delete temp->data;
+        temp->data = nullptr;
+        temp->key = TECH_KEY;
     }
 }
 
@@ -142,6 +144,7 @@ bool HashTable<TKey, TData>::reset()
 template <typename TKey, typename TData>
 bool HashTable<TKey, TData>::next()
 {
+    if (isEnded()) return true;
     current++;
     while (!isEnded())
     {
@@ -160,7 +163,11 @@ bool HashTable<TKey, TData>::next()
 template <typename TKey, typename TData>
 bool HashTable<TKey, TData>::isEnded() const
 {
-    return (current == this->size - 1);
+    for (size_t i = current + 1; i < this->size; i++)
+    {
+        if (records[i] != nullptr && records[i]->key != TECH_KEY) return false;
+    }
+    return true;
 }
 
 template <typename TKey, typename TData>
