@@ -6,8 +6,8 @@ struct TableRecord
     TKey key;
     TData* data;
 
-    TableRecord(TKey key_, TData* data_);
-    TableRecord(TKey key_, TData& data_);
+    TableRecord(TKey key_, const TData* data_);
+    TableRecord(TKey key_, const TData& data_);
     TableRecord(const TableRecord<TKey, TData>& temp);
     ~TableRecord();
 
@@ -27,11 +27,11 @@ protected:
     size_t count;
 
 public:
-    Table(size_t size_);
+    Table(size_t size_ = 10) {};
 
     //Операции с таблицей
-    virtual TableRecord<TKey, TData>* find(TKey key) = 0;
-    virtual void insert(TKey key, TData* data) = 0;
+    virtual TableRecord<TKey, TData>* find(TKey key) const = 0;
+    virtual void insert(TKey key, const TData* data) = 0;
     virtual void insert(TKey key, const TData& data) = 0;
     virtual void remove(TKey key) = 0;
 
@@ -41,8 +41,8 @@ public:
     virtual bool isEnded() = 0;
 
     //Доступ к текущей записи
-    TKey getKey() = 0;
-    TData* getData() = 0;
+    virtual TKey getKey() = 0;
+    virtual TData* getData() = 0;
 
     //Информационные методы
     bool empty() const;
@@ -52,14 +52,14 @@ public:
 
 
 template<typename TKey, typename TData>
-TableRecord<TKey, TData>::TableRecord(TKey key_, TData* data_)
+TableRecord<TKey, TData>::TableRecord(TKey key_, const TData* data_)
 {
     key = key_;
-    data = new TData(*data);
+    data = new TData(*data_);
 }
 
 template<typename TKey, typename TData>
-TableRecord<TKey, TData>::TableRecord<TKey, TData>(TKey key_, TData& data_)
+TableRecord<TKey, TData>::TableRecord<TKey, TData>(TKey key_, const TData& data_)
 {
     key = key_;
     data = new TData(data_);
@@ -68,8 +68,8 @@ TableRecord<TKey, TData>::TableRecord<TKey, TData>(TKey key_, TData& data_)
 template<typename TKey, typename TData>
 TableRecord<TKey, TData>::TableRecord(const TableRecord<TKey, TData>& temp)
 {
-    key = temp.key_;
-    data = new TData(temp.data_);
+    key = temp.key;
+    data = new TData(*temp.data);
 }
 
 template<typename TKey, typename TData>
@@ -82,7 +82,9 @@ template<typename TKey, typename TData>
 TableRecord<TKey, TData>& TableRecord<TKey, TData>::operator=(const TableRecord<TKey, TData> temp)
 {
     key = temp.key;
-    data = new TData(temp.data);
+    if (data != nullptr) delete data;
+    data = new TData(*temp.data);
+    return *this;
 }
 
 template<typename TKey, typename TData>
