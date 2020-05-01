@@ -10,6 +10,7 @@ public:
     //Операции с таблицей
     virtual TableRecord<TKey, TData>* find(TKey key) const;
     virtual void insert(TKey key, TData* data); //TODO: Сделать без сортировки
+    virtual void insert(TKey key, const TData& data);
     virtual void remove(TKey key);              //TODO: Сделать без сортировки
 
 protected:
@@ -35,11 +36,11 @@ TableRecord<TKey, TData>* SortedTable<TKey, TData>::find(TKey key) const
     while(left != right)
     {
         size_t middle = (left + right) / 2;
-        if (records[middle].key == key)
+        if (records[middle]->key == key)
         {
             return (records + middle)
         }
-        else if (record[middle].key < key)
+        else if (record[middle]->key < key)
         {
             left = middle;
         }
@@ -55,9 +56,15 @@ template <typename TKey, typename TData>
 void SortedTable<TKey, TData>::insert(TKey key, TData* data)
 {
     if (full()) throw "FULL";
-    elements[count] = TableRecord(key, data);
+    elements[count] =  new TableRecord(key, data);
     count++;
     sort();
+}
+
+template <typename TKey, typename TData>
+void SortedTable<TKey, TData>::insert(TKey key, const TData& data)
+{
+    insert(key, &data);
 }
 
 template <typename TKey, typename TData>
@@ -66,7 +73,12 @@ void SortedTable<TKey, TData>::remove(TKey key)
     TableRecord* temp = find(key);
     if (temp)
     {
-        *temp = elements[count - 1];
+        delete temp;
+        if (count > 1)
+        {
+            temp = elements[count - 1];
+        }
+        elements[count - 1];
         count--;
         sort();
     }
