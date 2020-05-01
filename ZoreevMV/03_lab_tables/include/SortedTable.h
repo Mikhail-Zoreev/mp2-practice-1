@@ -4,7 +4,7 @@ template <typename TKey, typename TData>
 class SortedTable : public UnorderedTable<TKey, TData>
 {
 public:
-    SortedTable(size_t size_);
+    SortedTable(size_t size_ = 10);
     SortedTable(const SortedTable<TKey, TData>& temp);
 
     //Операции с таблицей

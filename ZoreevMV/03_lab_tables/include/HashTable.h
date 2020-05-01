@@ -7,17 +7,17 @@
 template <typename TKey, typename TData>
 class HashTable : public Table<TKey, TData>
 {
-    TableRecord** records;
-    size_t next_free;
+    TableRecord<TKey, TData>** records;
+    size_t current;
     size_t mixing_ratio;
-    TableRecord* mark;
 
 public:
-    HashTable(size_t size_);
+    HashTable(size_t size_ = 10);
 
     //Операции с таблицей
     virtual TableRecord<TKey, TData>* find(TKey key) const;
-    virtual void insert(TKey key, TData* data);
+    virtual void insert(TKey key, const TData* data);
+    virtual void insert(TKey key, const TData& data);
     virtual void remove(TKey key);
 
     //Пермещение по таблице
@@ -25,24 +25,32 @@ public:
     virtual bool next();
     virtual bool isEnded() const;
 
+    //Доступ к текущей записи
+    virtual TKey getKey();
+    virtual TData* getData();
+
 protected:
-    size_t hash(const TKey key);
-    size_t getNext(size_t id);
+    size_t hash(const TKey key) const;
+    size_t getNext(size_t id) const;
 };
 
 template <typename TKey, typename TData>
 HashTable<TKey, TData>::HashTable(size_t size_)
 {
-    size = size_;
-    count = 0;
-    records = new TableRecord*[size_];
+    this->size = size_;
+    this->count = 0;
+    records = new TableRecord<TKey, TData>*[size_];
+    for (size_t i = 0; i < this->size; i++)
+    {
+        records[i] = nullptr;
+    }
     //Нахождение взаимно простого mixing_ratio
-    for (size_t i = size; i < 0; i--)
+    for (size_t i = this->size; i < 0; i--)
     {
         bool found = false;
         for (size_t j = 2; j < i; j--)
         {
-            if ((size % j == 0) && (i % j == 0))
+            if ((this->size % j == 0) && (i % j == 0))
             {
                 found = true;
                 break;
@@ -60,9 +68,9 @@ template <typename TKey, typename TData>
 TableRecord<TKey, TData>* HashTable<TKey, TData>::find(TKey key) const
 {
     if (key == TECH_KEY) throw "TECH_KEY";
-    TableRecord* result = nullptr;
+    TableRecord<TKey, TData>* result = nullptr;
     size_t current_position = hash(key); 
-    for (size_ t i = 0; i < size; i++)
+    for (size_t i = 0; i < this->size; i++)
     {
         if (records[current_position] == nullptr) break;
         else if (records[current_position]->key == key)
@@ -76,31 +84,37 @@ TableRecord<TKey, TData>* HashTable<TKey, TData>::find(TKey key) const
 }
 
 template <typename TKey, typename TData>
-void HashTable<TKey, TData>::insert(TKey key, TData* data)
+void HashTable<TKey, TData>::insert(TKey key, const TData* data)
 {
-    if (full()) throw "isFULL";
+    if (this->full()) throw "isFULL";
     if (key == TECH_KEY) throw "TECH_KEY";
     size_t current_position = hash(key);
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < this->size; i++)
     {
         if ((records[current_position] == nullptr) || (records[current_position]->key == TECH_KEY))
         {
             if (records[current_position] != nullptr) delete records[current_position];
-            records[current_position] = new TableRecord(key, data);
-            count++;
+            records[current_position] = new TableRecord<TKey, TData>(key, data);
+            this->count++;
             return;
         }
         current_position = getNext(current_position);
     }
-    throw "InsertionFAILED"
+    throw "InsertionFAILED";
+}
+
+template <typename TKey, typename TData>
+void HashTable<TKey, TData>::insert(TKey key, const TData& data)
+{
+    insert(key, &data);
 }
 
 template <typename TKey, typename TData>
 void HashTable<TKey, TData>::remove(TKey key)
 {
     if (key == TECH_KEY) throw "TECH_KEY";
-    TableRecord temp = find(key);
-    if (key != nullptr)
+    TableRecord<TKey, TData>* temp = find(key);
+    if (temp != nullptr)
     {
         delete temp;
         temp = new TableRecord<TKey, TData>(TECH_KEY, nullptr);
@@ -110,10 +124,10 @@ void HashTable<TKey, TData>::remove(TKey key)
 template <typename TKey, typename TData>
 bool HashTable<TKey, TData>::reset()
 {
-    current = records;
+    current = 0;
     while (!isEnded())
     {
-        if ((current != nullptr) && (current->key != TECH_KEY))
+        if ((records[current] != nullptr) && (records[current]->key != TECH_KEY))
         {
             break;
         }
@@ -131,7 +145,7 @@ bool HashTable<TKey, TData>::next()
     current++;
     while (!isEnded())
     {
-        if ((current != nullptr) && (current->key != TECH_KEY))
+        if ((records[current] != nullptr) && (records[current]->key != TECH_KEY))
         {
             break;
         }
@@ -146,17 +160,29 @@ bool HashTable<TKey, TData>::next()
 template <typename TKey, typename TData>
 bool HashTable<TKey, TData>::isEnded() const
 {
-    return (current == (records + size));
+    return (current == this->size - 1);
 }
 
 template <typename TKey, typename TData>
-size_t HashTable<TKey, TData>::hash(const TKey key)
+TKey HashTable<TKey, TData>::getKey()
 {
-    return k % size;
+    return records[current]->key;
 }
 
 template <typename TKey, typename TData>
-size_t HashTable<TKey, TData>::getNext(size_t id)
+TData* HashTable<TKey, TData>::getData()
 {
-    return (id + mixing_ratio) % size;
+    return records[current]->data;
+}
+
+template <typename TKey, typename TData>
+size_t HashTable<TKey, TData>::hash(const TKey key) const
+{
+    return key % this->size;
+}
+
+template <typename TKey, typename TData>
+size_t HashTable<TKey, TData>::getNext(size_t id) const
+{
+    return (id + mixing_ratio) % this->size;
 }

@@ -21,7 +21,7 @@ public:
     //Пермещение по таблице
     virtual bool reset();
     virtual bool next();
-    virtual bool isEnded();
+    virtual bool isEnded() const;
 
     //Доступ к текущей записи
     virtual TKey getKey();

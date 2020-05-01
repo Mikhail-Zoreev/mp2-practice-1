@@ -38,7 +38,7 @@ public:
     //Пермещение по таблице
     virtual bool reset() = 0;
     virtual bool next() = 0;
-    virtual bool isEnded() = 0;
+    virtual bool isEnded() const = 0;
 
     //Доступ к текущей записи
     virtual TKey getKey() = 0;
