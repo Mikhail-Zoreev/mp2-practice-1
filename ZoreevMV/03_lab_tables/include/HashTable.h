@@ -1,8 +1,7 @@
 #include "Table.h"
 
-/* Вместо записи pMark используется запись с key = 0 и data = nullptr
-следовательно создать записть с таким ключом нельзя*/
-#define TECH_KEY 0
+/* Вместо записи pMark с data = nullptr
+следовательно создать записть с пустым data нельзя*/
 
 template <typename TKey, typename TData>
 class HashTable : public Table<TKey, TData>
@@ -68,13 +67,12 @@ HashTable<TKey, TData>::HashTable(size_t size_)
 template <typename TKey, typename TData>
 TableRecord<TKey, TData>* HashTable<TKey, TData>::find(TKey key) const
 {
-    if (key == TECH_KEY) throw "TECH_KEY";
     TableRecord<TKey, TData>* result = nullptr;
     size_t current_position = hash(key); 
     for (size_t i = 0; i < this->size; i++)
     {
         if (records[current_position] == nullptr) break;
-        else if (records[current_position]->key == key)
+        else if ((records[current_position]->key == key) && (records[current_position] != nullptr))
         {
             result = records[current_position];
             break;
@@ -88,11 +86,11 @@ template <typename TKey, typename TData>
 void HashTable<TKey, TData>::insert(TKey key, const TData* data)
 {
     if (this->full()) throw "isFULL";
-    if (key == TECH_KEY) throw "TECH_KEY";
+    if (data = nullptr) throw "EmptyDATA";
     size_t current_position = hash(key);
     for (size_t i = 0; i < this->size; i++)
     {
-        if ((records[current_position] == nullptr) || (records[current_position]->key == TECH_KEY))
+        if ((records[current_position] == nullptr) || (records[current_position]->data == nullptr))
         {
             if (records[current_position] != nullptr) delete records[current_position];
             records[current_position] = new TableRecord<TKey, TData>(key, data);
@@ -113,13 +111,12 @@ void HashTable<TKey, TData>::insert(TKey key, const TData& data)
 template <typename TKey, typename TData>
 void HashTable<TKey, TData>::remove(TKey key)
 {
-    if (key == TECH_KEY) throw "TECH_KEY";
     TableRecord<TKey, TData>* temp = find(key);
     if (temp != nullptr)
     {
         delete temp->data;
         temp->data = nullptr;
-        temp->key = TECH_KEY;
+        temp->key = 0;
     }
 }
 
@@ -129,7 +126,7 @@ bool HashTable<TKey, TData>::reset()
     current = 0;
     while (!isEnded())
     {
-        if ((records[current] != nullptr) && (records[current]->key != TECH_KEY))
+        if ((records[current] != nullptr) && (records[current]->data != nullptr))
         {
             break;
         }
@@ -148,7 +145,7 @@ bool HashTable<TKey, TData>::next()
     current++;
     while (!isEnded())
     {
-        if ((records[current] != nullptr) && (records[current]->key != TECH_KEY))
+        if ((records[current] != nullptr) && (records[current]->data != nullptr))
         {
             break;
         }
