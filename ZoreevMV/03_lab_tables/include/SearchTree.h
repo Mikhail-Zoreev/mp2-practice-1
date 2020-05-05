@@ -12,6 +12,28 @@ struct Node
     Node(const Node& temp);
 };
 
+
+template<typename TKey, typename TData>
+class SearchTree
+{
+    Node<TKey, TData>* root;
+
+public:
+    SearchTree();
+    SearchTree(const SearchTree& temp);
+    ~SearchTree();
+
+    //Операци с деревом
+    Node<TKey, TData>* find(TKey key_);
+    Node<TKey, TData>* findMin(TKey key_);
+    Node<TKey, TData>* findMax(TKey key_);
+    void insert(TKey key_, TData* data_);
+    void remove(TKey key_);
+
+    Node<TKey, TData>* next(TKey key_);
+};
+
+//Методы Node
 template<typename TKey, typename TData>
 Node<TKey, TData>::Node(TKey key_, const TData* data_)
 {
@@ -42,23 +64,7 @@ Node<TKey, TData>::Node(const Node& temp)
     parent = nullptr;
 }
 
-
-template<typename TKey, typename TData>
-class SearchTree
-{
-    Node<TKey, TData>* root;
-
-public:
-    SearchTree();
-    SearchTree(const SearchTree& temp);
-    ~SearchTree();
-
-    //Операци с деревом
-    Node<TKey, TData>* find(TKey key_);
-    void insert(TKey key_, TData* data_);
-    void remove(TKey key_);
-};
-
+//Методы SearchTree
 template<typename TKey, typename TData>
 SearchTree<TKey, TData>::SearchTree()
 {
@@ -91,6 +97,30 @@ Node<TKey, TData>* SearchTree<TKey, TData>::find(TKey key_)
         {
             current = current->right;
         }
+    }
+    return current;
+}
+
+template<typename TKey, typename TData>
+Node<TKey, TData>* SearchTree<TKey, TData>::findMin(TKey key_)
+{
+    Node* current = nullptr;
+    if (!(current = find(key_))) return nullptr;
+    while (current->right != nullptr)
+    {
+        current = current->left;
+    }
+    return current;
+}
+
+template<typename TKey, typename TData>
+Node<TKey, TData>* SearchTree<TKey, TData>::findMax(TKey key_)
+{
+    Node* current = nullptr;
+    if (!(current = find(key_))) return nullptr;
+    while (current->right != nullptr)
+    {
+        current = current->right;
     }
     return current;
 }
@@ -161,4 +191,24 @@ void SearchTree<TKey, TData>::remove(TKey key_)
         delete node->data;
         node->data = y->data;
     }
+}
+
+template<typename TKey, typename TData>
+Node<TKey, TData>* SearchTree<TKey, TData>::next(TKey key_)
+{
+    Node *node = nullptr, *result = nullptr;
+    if (node = find(key_)) return nullptr;
+    if (node->right != nullptr)
+    {
+        result = findMin(key_);
+        return result;
+    }
+    result = node->parent;
+    Node* temp = node;
+    while ((result != nullptr) && (temp == result->right))
+    {
+        temp = result;
+        result = result->parent;
+    }
+    return result;
 }

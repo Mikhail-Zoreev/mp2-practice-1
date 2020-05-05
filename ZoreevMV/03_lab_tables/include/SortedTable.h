@@ -8,10 +8,10 @@ public:
     SortedTable(const SortedTable<TKey, TData>& temp);
 
     //Операции с таблицей
-    virtual TableRecord<TKey, TData>* find(TKey key) const;
-    virtual void insert(TKey key, const TData* data); //TODO: Сделать без сортировки
-    virtual void insert(TKey key, const TData& data);
-    virtual void remove(TKey key);              //TODO: Сделать без сортировки
+    virtual TableRecord<TKey, TData>* find(TKey key_) const;
+    virtual void insert(TKey key_, const TData* data_); //TODO: Сделать без сортировки
+    virtual void insert(TKey key_, const TData& data_); //TODO: Сделать без сортировки
+    virtual void remove(TKey key_);
 
 protected:
     void sort();
@@ -30,7 +30,7 @@ SortedTable<TKey, TData>::SortedTable(const SortedTable<TKey, TData>& temp) : Un
 }
 
 template <typename TKey, typename TData>
-TableRecord<TKey, TData>* SortedTable<TKey, TData>::find(TKey key) const
+TableRecord<TKey, TData>* SortedTable<TKey, TData>::find(TKey key_) const
 {
     size_t left = 0, right = this->count;
     while(left != right)
@@ -53,7 +53,7 @@ TableRecord<TKey, TData>* SortedTable<TKey, TData>::find(TKey key) const
 }
 
 template <typename TKey, typename TData>
-void SortedTable<TKey, TData>::insert(TKey key, const TData* data)
+void SortedTable<TKey, TData>::insert(TKey key_, const TData* data_)
 {
     if (this->full()) throw "FULL";
     this->records[this->count] =  new TableRecord<TKey, TData>(key, data);
@@ -62,13 +62,13 @@ void SortedTable<TKey, TData>::insert(TKey key, const TData* data)
 }
 
 template <typename TKey, typename TData>
-void SortedTable<TKey, TData>::insert(TKey key, const TData& data)
+void SortedTable<TKey, TData>::insert(TKey key_, const TData& data_)
 {
     insert(key, &data);
 }
 
 template <typename TKey, typename TData>
-void SortedTable<TKey, TData>::remove(TKey key)
+void SortedTable<TKey, TData>::remove(TKey key_)
 {
     TableRecord<TKey, TData>* temp = find(key);
     if (temp)

@@ -1,0 +1,102 @@
+#include "Table.h"
+#include "SearchTree.h"
+
+template <typename TKey, typename TData>
+class SearchTreeTable : public Table<TKey, TData>
+{
+    SearchTree<TKey, TData>* root;
+    TableRecord<TKey, TData>* current;
+
+    SearchTreeTable();
+    SearchTreeTable(const SearchTreeTable& temp);
+    ~SearchTreeTable();
+
+    //Операции с таблицей
+    virtual TableRecord<TKey, TData>* find(TKey key_) const;
+    virtual void insert(TKey key_, const TData* data);
+    virtual void insert(TKey key_, const TData& data_);
+    virtual void remove(TKey key_);
+
+    //Пермещение по таблице
+    virtual bool reset();
+    virtual bool next();
+    virtual bool isEnded() const;
+
+    //Доступ к текущей записи
+    virtual TKey getKey();
+    virtual TData* getData();
+};
+
+template <typename TKey, typename TData>
+SearchTreeTable<TKey, TData>::SearchTreeTable()
+{
+    root = new SearchTree();
+    current = nullptr;
+}
+
+template <typename TKey, typename TData>
+SearchTreeTable<TKey, TData>::SearchTreeTable(const SearchTreeTable& temp)
+{
+    root = new SearchTree(temp.root);
+    current = (root.getMin).data;
+}
+
+template <typename TKey, typename TData>
+SearchTreeTable<TKey, TData>::~SearchTreeTable()
+{
+    delete root;
+}
+
+template <typename TKey, typename TData>
+TableRecord<TKey, TData>* SearchTreeTable<TKey, TData>::find(TKey key_) const
+{
+    return (root.find(key_)).data;
+}
+
+template <typename TKey, typename TData>
+void SearchTreeTable<TKey, TData>::insert(TKey key_, const TData* data_)
+{
+    root.insert(key_, new TableRecord(key_, data_));
+}
+
+template <typename TKey, typename TData>
+void SearchTreeTable<TKey, TData>::insert(TKey key_, const TData& data_)
+{
+    root.insert(key_, new TableRecord(key_, data_));
+}
+
+template <typename TKey, typename TData>
+void SearchTreeTable<TKey, TData>::remove(TKey key_)
+{
+    root.remove(key_);
+}
+
+template <typename TKey, typename TData>
+bool SearchTreeTable<TKey, TData>::reset()
+{
+    current = (root.getMin).data;
+}
+
+template <typename TKey, typename TData>
+bool SearchTreeTable<TKey, TData>::next()
+{
+    current = root.next(current.key);
+}
+
+template <typename TKey, typename TData>
+bool SearchTreeTable<TKey, TData>::isEnded() const
+{
+    return (root.next(current.key) == nullptr);
+}
+
+template <typename TKey, typename TData>
+TKey SearchTreeTable<TKey, TData>::getKey()
+{
+    reutrn current->key;
+}
+
+template <typename TKey, typename TData>
+TData* SearchTreeTable<TKey, TData>::getData()
+{
+    return current->data;
+}

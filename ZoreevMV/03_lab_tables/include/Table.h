@@ -30,7 +30,7 @@ public:
     Table(size_t size_ = 10) {};
 
     //Операции с таблицей
-    virtual TableRecord<TKey, TData>* find(TKey key) const = 0;
+    virtual TableRecord<TKey, TData>* find(TKey key_) const = 0;
     virtual void insert(TKey key, const TData* data) = 0;
     virtual void insert(TKey key, const TData& data) = 0;
     virtual void remove(TKey key) = 0;

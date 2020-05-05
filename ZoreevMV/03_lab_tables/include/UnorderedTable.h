@@ -13,10 +13,10 @@ public:
     ~UnorderedTable();
 
     //Операции с таблицей
-    virtual TableRecord<TKey, TData>* find(TKey key) const;
-    virtual void insert(TKey key, const TData* data);
-    virtual void insert(TKey key, const TData& data);
-    virtual void remove(TKey key);
+    virtual TableRecord<TKey, TData>* find(TKey key_) const;
+    virtual void insert(TKey key_, const TData* data_);
+    virtual void insert(TKey key_, const TData& data_);
+    virtual void remove(TKey key_);
 
     //Пермещение по таблице
     virtual bool reset();
@@ -65,7 +65,7 @@ UnorderedTable<TKey, TData>::~UnorderedTable()
 }
 
 template <typename TKey, typename TData>
-TableRecord<TKey, TData>* UnorderedTable<TKey, TData>::find(TKey key) const
+TableRecord<TKey, TData>* UnorderedTable<TKey, TData>::find(TKey key_) const
 {
     for (size_t i = 0; i < this->count; i++)
     {
@@ -75,7 +75,7 @@ TableRecord<TKey, TData>* UnorderedTable<TKey, TData>::find(TKey key) const
 }
 
 template <typename TKey, typename TData>
-void UnorderedTable<TKey, TData>::insert(TKey key, const TData* data)
+void UnorderedTable<TKey, TData>::insert(TKey key, const TData* data_)
 {
     if (this->full()) throw "FULL";
     records[this->count] =  new TableRecord<TKey, TData>(key, data);
@@ -83,13 +83,13 @@ void UnorderedTable<TKey, TData>::insert(TKey key, const TData* data)
 }
 
 template <typename TKey, typename TData>
-void UnorderedTable<TKey, TData>::insert(TKey key, const TData& data)
+void UnorderedTable<TKey, TData>::insert(TKey key_, const TData& data_)
 {
     insert(key, &data);
 }
 
 template <typename TKey, typename TData>
-void UnorderedTable<TKey, TData>::remove(TKey key)
+void UnorderedTable<TKey, TData>::remove(TKey key_)
 {
     TableRecord<TKey, TData>* temp = find(key);
     if (temp)
@@ -116,7 +116,7 @@ bool UnorderedTable<TKey, TData>::next()
 }
 
 template <typename TKey, typename TData>
-bool UnorderedTable<TKey, TData>::isEnded()
+bool UnorderedTable<TKey, TData>::isEnded() const
 {
     return (current + 1) == this->count;
 }
