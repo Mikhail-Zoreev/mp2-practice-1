@@ -86,7 +86,7 @@ template <typename TKey, typename TData>
 void HashTable<TKey, TData>::insert(TKey key, const TData* data)
 {
     if (this->full()) throw "isFULL";
-    if (data = nullptr) throw "EmptyDATA";
+    if (data == nullptr) throw "EmptyDATA";
     size_t current_position = hash(key);
     for (size_t i = 0; i < this->size; i++)
     {
@@ -162,7 +162,7 @@ bool HashTable<TKey, TData>::isEnded() const
 {
     for (size_t i = current + 1; i < this->size; i++)
     {
-        if (records[i] != nullptr && records[i]->key != TECH_KEY) return false;
+        if (records[i] != nullptr && records[i]->data != nullptr) return false;
     }
     return true;
 }

@@ -4,9 +4,9 @@
 template <typename TKey, typename TData>
 class SearchTreeTable : public Table<TKey, TData>
 {
-    SearchTree<TKey, TData>* root;
+    SearchTree<TKey, TableRecord<TKey, TData>>* root;
     TableRecord<TKey, TData>* current;
-
+public:
     SearchTreeTable();
     SearchTreeTable(const SearchTreeTable& temp);
     ~SearchTreeTable();
@@ -30,7 +30,7 @@ class SearchTreeTable : public Table<TKey, TData>
 template <typename TKey, typename TData>
 SearchTreeTable<TKey, TData>::SearchTreeTable()
 {
-    root = new SearchTree();
+    root = new SearchTree<TKey, TableRecord<TKey, TData>>();
     current = nullptr;
 }
 
@@ -50,49 +50,51 @@ SearchTreeTable<TKey, TData>::~SearchTreeTable()
 template <typename TKey, typename TData>
 TableRecord<TKey, TData>* SearchTreeTable<TKey, TData>::find(TKey key_) const
 {
-    return (root.find(key_)).data;
+    return (root->find(key_))->data;
 }
 
 template <typename TKey, typename TData>
 void SearchTreeTable<TKey, TData>::insert(TKey key_, const TData* data_)
 {
-    root.insert(key_, new TableRecord(key_, data_));
+    root->insert(key_, new TableRecord<TKey, TData>(key_, data_));
 }
 
 template <typename TKey, typename TData>
 void SearchTreeTable<TKey, TData>::insert(TKey key_, const TData& data_)
 {
-    root.insert(key_, new TableRecord(key_, data_));
+    root->insert(key_, new TableRecord<TKey, TData>(key_, data_));
 }
 
 template <typename TKey, typename TData>
 void SearchTreeTable<TKey, TData>::remove(TKey key_)
 {
-    root.remove(key_);
+    root->remove(key_);
 }
 
 template <typename TKey, typename TData>
 bool SearchTreeTable<TKey, TData>::reset()
 {
-    current = (root.getMin).data;
+    current = (root->findMin(root->root->key))->data;
+    return isEnded();
 }
 
 template <typename TKey, typename TData>
 bool SearchTreeTable<TKey, TData>::next()
 {
-    current = root.next(current.key);
+    current = root->next(current->key)->data;
+    return isEnded();
 }
 
 template <typename TKey, typename TData>
 bool SearchTreeTable<TKey, TData>::isEnded() const
 {
-    return (root.next(current.key) == nullptr);
+    return (root->next(current->key) == nullptr);
 }
 
 template <typename TKey, typename TData>
 TKey SearchTreeTable<TKey, TData>::getKey()
 {
-    reutrn current->key;
+    return current->key;
 }
 
 template <typename TKey, typename TData>

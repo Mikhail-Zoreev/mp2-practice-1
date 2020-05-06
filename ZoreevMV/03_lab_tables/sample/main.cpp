@@ -1,14 +1,31 @@
 #include <iostream>
-#include "../include/HashTable.h"
+#include "../include/SearchTreeTable.h"
 
 int main(int argc, char* argv[])
 {
-    HashTable<size_t, size_t> test;
-    test.insert(1, 1);
-    test.insert(4, 2);
-    test.remove(1);
-    test.reset();
-    std::cout << test.getKey();
-    test.next();
-    std::cout << test.getKey();
+    SearchTreeTable<size_t, size_t> table;
+    table.insert(2, 1);
+    table.insert(1, 1);
+    table.insert(3, 1);
+    table.insert(6, 1);
+    table.insert(4, 1);
+    table.insert(7, 1);
+    table.insert(5, 1);
+    table.reset();
+    while (!table.isEnded())
+    {
+        std::cout << table.getKey();
+        table.next();
+    }
+    std::cout << table.getKey() << std::endl;
+
+    SearchTreeTable<size_t, size_t> copy(table);
+
+    copy.reset();
+    while (!table.isEnded())
+    {
+        std::cout << copy.getKey();
+        copy.next();
+    }
+    std::cout << copy.getKey();
 }
