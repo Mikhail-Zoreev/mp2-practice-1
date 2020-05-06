@@ -77,16 +77,17 @@ SearchTree<TKey, TData>::SearchTree()
 template<typename TKey, typename TData>
 SearchTree<TKey, TData>::SearchTree(const SearchTree& temp)
 {
-    if (temp->root == nullptr)
+    if (temp.root == nullptr)
     {
         root = nullptr;
         return;
     }
     std::queue<Node<TKey, TData>*> nodes;
-    nodes.push(temp->root);
+    nodes.push(temp.root);
     while (!nodes.empty())
     {
-        Node<TKey, TData>* current = nodes.pop();
+        Node<TKey, TData>* current = nodes.front();
+        nodes.pop();
         insert(current->key, current->data);
         if (current->left != nullptr) nodes.push(current->left);
         if (current->right != nullptr) nodes.push(current->right);

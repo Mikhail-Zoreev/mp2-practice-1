@@ -37,8 +37,8 @@ SearchTreeTable<TKey, TData>::SearchTreeTable()
 template <typename TKey, typename TData>
 SearchTreeTable<TKey, TData>::SearchTreeTable(const SearchTreeTable& temp)
 {
-    root = new SearchTree(temp.root);
-    current = (root.getMin).data;
+    root = new SearchTree<TKey, TableRecord<TKey, TData>>(*(temp.root));
+    reset();
 }
 
 template <typename TKey, typename TData>

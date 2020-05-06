@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     SearchTreeTable<size_t, size_t> copy(table);
 
     copy.reset();
-    while (!table.isEnded())
+    while (!copy.isEnded())
     {
         std::cout << copy.getKey();
         copy.next();
