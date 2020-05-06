@@ -1,3 +1,6 @@
+#include <queue>
+#include <stack>
+
 template<typename TKey, typename TData>
 struct Node
 {
@@ -27,7 +30,7 @@ public:
     Node<TKey, TData>* find(TKey key_);
     Node<TKey, TData>* findMin(TKey key_);
     Node<TKey, TData>* findMax(TKey key_);
-    void insert(TKey key_, TData* data_);
+    void insert(TKey key_, const TData* data_);
     void remove(TKey key_);
 
     Node<TKey, TData>* next(TKey key_);
@@ -74,13 +77,53 @@ SearchTree<TKey, TData>::SearchTree()
 template<typename TKey, typename TData>
 SearchTree<TKey, TData>::SearchTree(const SearchTree& temp)
 {
-    //TODO: Реализация
+    if (temp->root == nullptr)
+    {
+        root = nullptr;
+        return;
+    }
+    std::queue<Node<TKey, TData>*> nodes;
+    nodes.push(temp->root);
+    while (!nodes.empty())
+    {
+        Node<TKey, TData>* current = nodes.pop();
+        insert(current->key, current->data);
+        if (current->left != nullptr) nodes.push(current->left);
+        if (current->right != nullptr) nodes.push(current->right);
+    }
 }
 
 template<typename TKey, typename TData>
 SearchTree<TKey, TData>::~SearchTree()
 {
-    //TODO: Реализация
+    if (root == nullptr) return;
+    std::stack<Node<TKey, TData>*> nodes;
+    nodes.push(root);
+    while (!nodes.empty())
+    {
+        Node<TKey, TData>* current = nodes.top();
+        if ((current->left == nullptr) && (current->right == nullptr))
+        {
+            if (current->parent != nullptr)
+            {
+                if (current == current->parent->left)
+                {
+                    current->parent->left = nullptr;
+                }
+                else
+                {
+                    current->parent->right = nullptr;
+                }
+            }
+            delete current;
+            nodes.push();
+        }
+        else
+        {
+            if (current->left != nullptr) nodes.push(current->left);
+            if (current->right != nullptr) nodes.push(current->right);
+        }
+    }
 }
 
 template<typename TKey, typename TData>
@@ -126,7 +169,7 @@ Node<TKey, TData>* SearchTree<TKey, TData>::findMax(TKey key_)
 }
 
 template<typename TKey, typename TData>
-void SearchTree<TKey, TData>::insert(TKey key_, TData* data_)
+void SearchTree<TKey, TData>::insert(TKey key_, const TData* data_)
 {
     if (root == nullptr)
     {
