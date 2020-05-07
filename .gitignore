@@ -32,6 +32,7 @@
 *.app
 
 #Bonus
+\.vscode
 *.db
 *.db-wal
 *.db-shm
@@ -42,3 +43,6 @@
 *.log
 *.tlog
 *.ipch
+*vcxproj.user
+*.enc
+*.ilk
