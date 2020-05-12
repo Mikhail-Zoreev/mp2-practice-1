@@ -2,7 +2,7 @@
 
 #include "Table.h"
 
-/* Вместо записи pMark с data = nullptr
+/* Вместо записи pMark используется запись с data = nullptr
 следовательно создать записть с пустым data нельзя*/
 
 template <typename TKey, typename TData>

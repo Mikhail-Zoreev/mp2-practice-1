@@ -27,7 +27,6 @@ protected:
     size_t count;
 
 public:
-    Table(size_t size_ = 10) {};
 
     //Операции с таблицей
     virtual TableRecord<TKey, TData>* find(TKey key_) const = 0;
@@ -51,6 +50,8 @@ public:
 };
 
 
+//--------Методы TableRecord------------------------------------------------------------------------
+
 template<typename TKey, typename TData>
 TableRecord<TKey, TData>::TableRecord(TKey key_, const TData* data_)
 {
@@ -59,7 +60,7 @@ TableRecord<TKey, TData>::TableRecord(TKey key_, const TData* data_)
 }
 
 template<typename TKey, typename TData>
-TableRecord<TKey, TData>::TableRecord<TKey, TData>(TKey key_, const TData& data_)
+TableRecord<TKey, TData>::TableRecord(TKey key_, const TData& data_)
 {
     key = key_;
     data = new TData(data_);
@@ -81,6 +82,7 @@ TableRecord<TKey, TData>::~TableRecord()
 template<typename TKey, typename TData>
 TableRecord<TKey, TData>& TableRecord<TKey, TData>::operator=(const TableRecord<TKey, TData> temp)
 {
+    if (this == &temp) return;
     key = temp.key;
     if (data != nullptr) delete data;
     data = new TData(*temp.data);
@@ -104,6 +106,8 @@ bool TableRecord<TKey, TData>::operator==(const TableRecord<TKey, TData> temp)
 {
     return key == temp.key;
 }
+
+//--------Методы Table------------------------------------------------------------------------------
 
 template<typename TKey, typename TData>
 bool Table<TKey, TData>::empty() const

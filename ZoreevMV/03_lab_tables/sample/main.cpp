@@ -1,4 +1,4 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <string>
 
 #include "../include/SearchTreeTable.h"
@@ -35,12 +35,13 @@ int main(int argc, char* argv[])
         table = new HashTable<size_t, std::string>(5);
         break;
     default:
+        std::cout << "Wrong type" << std::endl;
         return 1;
     }
 
-    //--------Тест вставки--------------------------------------------------------------------------
+    //--------РўРµСЃС‚ РІСЃС‚Р°РІРєРё--------------------------------------------------------------------------
 
-    std::cout << std::endl << "Insertation test" << std::endl;
+    std::cout << std::endl << "1) Insertation test" << std::endl;
 
     table->insert(13, "John");
     table->insert(9, "Karl");
@@ -55,9 +56,9 @@ int main(int argc, char* argv[])
         table->next();
     }
 
-    //--------Тест проверки на конец таблицы--------------------------------------------------------
+    //--------РўРµСЃС‚ РїСЂРѕРІРµСЂРєРё РЅР° РєРѕРЅРµС† С‚Р°Р±Р»РёС†С‹--------------------------------------------------------
 
-    std::cout << std::endl << "Table end check test" << std::endl;
+    std::cout << std::endl << "2) Table end check test" << std::endl;
 
     if (table->isEnded())
     {
@@ -80,9 +81,9 @@ int main(int argc, char* argv[])
         std::cout << "Table is not ended" << std::endl;
     }
 
-    //--------Тест проверки на полноту--------------------------------------------------------------
+    //--------РўРµСЃС‚ РїСЂРѕРІРµСЂРєРё РЅР° РїРѕР»РЅРѕС‚Сѓ--------------------------------------------------------------
 
-    std::cout << std::endl << "Table full check test" << std::endl;
+    std::cout << std::endl << "3) Table full check test" << std::endl;
 
     if (table->full())
     {
@@ -93,9 +94,9 @@ int main(int argc, char* argv[])
         std::cout << "Table is not full, current count is " << table->getCount() << std::endl;
     }
 
-    //--------Тест удаления элемента----------------------------------------------------------------
+    //--------РўРµСЃС‚ СѓРґР°Р»РµРЅРёСЏ СЌР»РµРјРµРЅС‚Р°----------------------------------------------------------------
 
-    std::cout << std::endl << "Recorod removal test" << std::endl;
+    std::cout << std::endl << "4) Recorod removal test" << std::endl;
     std::cout << "Removing records with keys 13, 2 and 16" << std::endl;
 
     table->remove(13);
