@@ -82,7 +82,7 @@ TableRecord<TKey, TData>::~TableRecord()
 template<typename TKey, typename TData>
 TableRecord<TKey, TData>& TableRecord<TKey, TData>::operator=(const TableRecord<TKey, TData> temp)
 {
-    if (this == &temp) return;
+    if (this == &temp) return *this;
     key = temp.key;
     if (data != nullptr) delete data;
     data = new TData(*temp.data);

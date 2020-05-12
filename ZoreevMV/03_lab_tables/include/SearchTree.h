@@ -38,7 +38,8 @@ public:
     Node<TKey, TData>* next(TKey key_);
 };
 
-//Методы Node
+//--------Методы Node-------------------------------------------------------------------------------
+
 template<typename TKey, typename TData>
 Node<TKey, TData>::Node(TKey key_, const TData* data_)
 {
@@ -69,7 +70,8 @@ Node<TKey, TData>::Node(const Node& temp)
     parent = nullptr;
 }
 
-//Методы SearchTree
+//--------Методы SearchTree-------------------------------------------------------------------------
+
 template<typename TKey, typename TData>
 SearchTree<TKey, TData>::SearchTree()
 {
