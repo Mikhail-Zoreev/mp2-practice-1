@@ -1,31 +1,110 @@
 #include <iostream>
+#include <string>
+
 #include "../include/SearchTreeTable.h"
+#include "../include/UnorderedTable.h"
+#include "../include/SortedTable.h"
+#include "../include/HashTable.h"
+
 
 int main(int argc, char* argv[])
 {
-    SearchTreeTable<size_t, size_t> table;
-    table.insert(2, 1);
-    table.insert(1, 1);
-    table.insert(3, 1);
-    table.insert(6, 1);
-    table.insert(4, 1);
-    table.insert(7, 1);
-    table.insert(5, 1);
-    table.reset();
-    while (!table.isEnded())
-    {
-        std::cout << table.getKey();
-        table.next();
-    }
-    std::cout << table.getKey() << std::endl;
+    Table<size_t, std::string>* table;
+    char mode;
 
-    SearchTreeTable<size_t, size_t> copy(table);
+    std::cout << "Please, input table type" << std::endl;
+    std::cout << "0    Search tree table" << std::endl;
+    std::cout << "1    Unordered table" << std::endl;
+    std::cout << "2    Sorted table" << std::endl;
+    std::cout << "3    Hash Table" << std::endl;
+    std::cin >> mode;
 
-    copy.reset();
-    while (!copy.isEnded())
+    switch (mode)
     {
-        std::cout << copy.getKey();
-        copy.next();
+    case '0':
+        table = new SearchTreeTable<size_t, std::string>;
+        break;
+
+    case '1':
+        table = new UnorderedTable<size_t, std::string>(5);
+        break;
+    case '2':
+        table = new SortedTable<size_t, std::string>(5);
+        break;
+    case '3':
+        table = new HashTable<size_t, std::string>(5);
+        break;
+    default:
+        return 1;
     }
-    std::cout << copy.getKey();
+
+    //--------Тест вставки----------------------------------------------------------------------
+
+    std::cout << std::endl << "Insertation test" << std::endl;
+
+    table->insert(3, "John");
+    table->insert(1, "Karl");
+    table->insert(0, "Ann");
+    table->insert(4, "Harry");
+    table->insert(2, "Walter");
+
+    table->reset();
+    for (size_t i = 0; i < table->getCount(); i++)
+    {
+        std::cout << table->getKey() << " " << *(table->getData()) << std::endl;
+        table->next();
+    }
+
+    //--------Тест проверки на конец таблицы--------------------------------------------------------
+
+    std::cout << std::endl << "Table end check test" << std::endl;
+
+    if (table->isEnded())
+    {
+        std::cout << "Table is ended" << std::endl;
+    }
+    else
+    {
+        std::cout << "Table is not ended" << std::endl;
+    }
+
+    std::cout << std::endl << "Reseting position" << std::endl;
+    table->reset();
+
+    if (table->isEnded())
+    {
+        std::cout << "Table is ended" << std::endl;
+    }
+    else
+    {
+        std::cout << "Table is not ended" << std::endl;
+    }
+
+    //--------Тест проверки на полноту--------------------------------------------------------------
+
+    std::cout << std::endl << "Table full check test" << std::endl;
+
+    if (table->full())
+    {
+        std::cout << "Table is full, current count is " << table->getCount() << std::endl;
+    }
+    else
+    {
+        std::cout << "Table is not full, current count is " << table->getCount() << std::endl;
+    }
+
+    //--------Тест удаления элемента----------------------------------------------------------------
+
+    std::cout << std::endl << "Recorod removal test" << std::endl;
+    std::cout << "Removing records with keys 3 and 1" << std::endl;
+
+    table->remove(3);
+    table->remove(1);
+
+    table->reset();
+    for (size_t i = 0; i < table->getCount(); i++)
+    {
+        std::cout << table->getKey() << " " << *(table->getData()) << std::endl;
+        table->next();
+    }
 }

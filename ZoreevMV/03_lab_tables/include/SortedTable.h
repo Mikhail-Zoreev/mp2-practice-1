@@ -1,3 +1,5 @@
+#pragma once
+
 #include "UnorderedTable.h"
 
 template <typename TKey, typename TData>
@@ -36,11 +38,11 @@ TableRecord<TKey, TData>* SortedTable<TKey, TData>::find(TKey key_) const
     while(left != right)
     {
         size_t middle = (left + right) / 2;
-        if (this->records[middle]->key == key)
+        if (this->records[middle]->key == key_)
         {
             return this->records[middle];
         }
-        else if (this->records[middle]->key < key)
+        else if (this->records[middle]->key < key_)
         {
             left = middle;
         }
@@ -56,7 +58,7 @@ template <typename TKey, typename TData>
 void SortedTable<TKey, TData>::insert(TKey key_, const TData* data_)
 {
     if (this->full()) throw "FULL";
-    this->records[this->count] =  new TableRecord<TKey, TData>(key, data);
+    this->records[this->count] =  new TableRecord<TKey, TData>(key_, data_);
     this->count++;
     sort();
 }
@@ -64,13 +66,13 @@ void SortedTable<TKey, TData>::insert(TKey key_, const TData* data_)
 template <typename TKey, typename TData>
 void SortedTable<TKey, TData>::insert(TKey key_, const TData& data_)
 {
-    insert(key, &data);
+    insert(key_, &data_);
 }
 
 template <typename TKey, typename TData>
 void SortedTable<TKey, TData>::remove(TKey key_)
 {
-    TableRecord<TKey, TData>* temp = find(key);
+    TableRecord<TKey, TData>* temp = find(key_);
     if (temp)
     {
         *temp = *this->records[this->count - 1];

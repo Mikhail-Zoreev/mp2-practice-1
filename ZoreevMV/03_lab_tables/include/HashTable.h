@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Table.h"
 
 /* Вместо записи pMark с data = nullptr
@@ -48,7 +50,7 @@ HashTable<TKey, TData>::HashTable(size_t size_)
     for (size_t i = this->size; i < 0; i--)
     {
         bool found = false;
-        for (size_t j = 2; j < i; j--)
+        for (size_t j = 2; j < i; j++)
         {
             if ((this->size % j == 0) && (i % j == 0))
             {

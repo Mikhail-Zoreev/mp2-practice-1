@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Table.h"
 
 template <typename TKey, typename TData>
@@ -69,29 +71,29 @@ TableRecord<TKey, TData>* UnorderedTable<TKey, TData>::find(TKey key_) const
 {
     for (size_t i = 0; i < this->count; i++)
     {
-        if (records[i]->key == key) return records[i];
+        if (records[i]->key == key_) return records[i];
     }
     return nullptr;
 }
 
 template <typename TKey, typename TData>
-void UnorderedTable<TKey, TData>::insert(TKey key, const TData* data_)
+void UnorderedTable<TKey, TData>::insert(TKey key_, const TData* data_)
 {
     if (this->full()) throw "FULL";
-    records[this->count] =  new TableRecord<TKey, TData>(key, data);
+    records[this->count] =  new TableRecord<TKey, TData>(key_, data_);
     this->count++; 
 }
 
 template <typename TKey, typename TData>
 void UnorderedTable<TKey, TData>::insert(TKey key_, const TData& data_)
 {
-    insert(key, &data);
+    insert(key_, &data_);
 }
 
 template <typename TKey, typename TData>
 void UnorderedTable<TKey, TData>::remove(TKey key_)
 {
-    TableRecord<TKey, TData>* temp = find(key);
+    TableRecord<TKey, TData>* temp = find(key_);
     if (temp)
     {
         *temp = *records[this->count - 1];
