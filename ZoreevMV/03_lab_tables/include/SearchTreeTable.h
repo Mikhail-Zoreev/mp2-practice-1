@@ -1,5 +1,6 @@
 #include "Table.h"
 #include "SearchTree.h"
+#include "Exception.h"
 
 template <typename TKey, typename TData>
 class SearchTreeTable : public Table<TKey, TData>
@@ -27,7 +28,7 @@ public:
     virtual TData* getData();
 
     //Информационные методы
-    bool full() const;
+    virtual bool full() const;
 };
 
 template <typename TKey, typename TData>
@@ -75,14 +76,21 @@ void SearchTreeTable<TKey, TData>::insert(TKey key_, const TData& data_)
 template <typename TKey, typename TData>
 void SearchTreeTable<TKey, TData>::remove(TKey key_)
 {
-    root->remove(key_);
-    this->count--;
+    if (root->find(key_) != nullptr)
+    {
+        root->remove(key_);
+        this->count--;
+    }
 }
 
 template <typename TKey, typename TData>
 bool SearchTreeTable<TKey, TData>::reset()
 {
-    current = (root->findMin(root->root->key))->data;
+    current = nullptr;
+    if (this->count != 0)
+    {
+        current = (root->findMin(root->root->key))->data;
+    }
     return isEnded();
 }
 
@@ -97,7 +105,7 @@ bool SearchTreeTable<TKey, TData>::next()
 template <typename TKey, typename TData>
 bool SearchTreeTable<TKey, TData>::isEnded() const
 {
-    return (root->next(current->key) == nullptr);
+    return ((current == nullptr) || (root->next(current->key) == nullptr));
 }
 
 template <typename TKey, typename TData>

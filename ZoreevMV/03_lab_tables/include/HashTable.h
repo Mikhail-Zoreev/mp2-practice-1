@@ -2,6 +2,8 @@
 
 #include "Table.h"
 
+#include "Exception.h"
+
 /* Вместо записи pMark используется запись с data = nullptr
 следовательно создать записть с пустым data нельзя*/
 
@@ -88,8 +90,8 @@ TableRecord<TKey, TData>* HashTable<TKey, TData>::find(TKey key) const
 template <typename TKey, typename TData>
 void HashTable<TKey, TData>::insert(TKey key, const TData* data)
 {
-    if (this->full()) throw "isFULL";
-    if (data == nullptr) throw "EmptyDATA";
+    if (this->full()) throw IsFullException();
+    if (data == nullptr) throw BadDataException();
     size_t current_position = hash(key);
     for (size_t i = 0; i < this->size; i++)
     {

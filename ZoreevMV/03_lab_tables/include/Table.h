@@ -44,8 +44,8 @@ public:
     virtual TData* getData() = 0;
 
     //Информационные методы
-    bool empty() const;
-    bool full() const;
+    virtual bool empty() const;
+    virtual bool full() const;
     size_t getCount();
 };
 

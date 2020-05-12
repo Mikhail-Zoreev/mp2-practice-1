@@ -2,6 +2,8 @@
 
 #include "UnorderedTable.h"
 
+#include "Exception.h"
+
 template <typename TKey, typename TData>
 class SortedTable : public UnorderedTable<TKey, TData>
 {
@@ -57,7 +59,7 @@ TableRecord<TKey, TData>* SortedTable<TKey, TData>::find(TKey key_) const
 template <typename TKey, typename TData>
 void SortedTable<TKey, TData>::insert(TKey key_, const TData* data_)
 {
-    if (this->full()) throw "FULL";
+    if (this->full()) throw IsFullException();
 
     size_t index = 0;
     while ((index < this->count) && (this->records[index]->key < key_))
