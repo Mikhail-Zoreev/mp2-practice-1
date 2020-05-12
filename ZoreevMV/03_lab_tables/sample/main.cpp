@@ -38,15 +38,15 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    //--------Тест вставки----------------------------------------------------------------------
+    //--------Тест вставки--------------------------------------------------------------------------
 
     std::cout << std::endl << "Insertation test" << std::endl;
 
-    table->insert(3, "John");
-    table->insert(1, "Karl");
-    table->insert(0, "Ann");
-    table->insert(4, "Harry");
-    table->insert(2, "Walter");
+    table->insert(13, "John");
+    table->insert(9, "Karl");
+    table->insert(2, "Ann");
+    table->insert(7, "Harry");
+    table->insert(16, "Walter");
 
     table->reset();
     for (size_t i = 0; i < table->getCount(); i++)
@@ -96,10 +96,11 @@ int main(int argc, char* argv[])
     //--------Тест удаления элемента----------------------------------------------------------------
 
     std::cout << std::endl << "Recorod removal test" << std::endl;
-    std::cout << "Removing records with keys 3 and 1" << std::endl;
+    std::cout << "Removing records with keys 13, 2 and 16" << std::endl;
 
-    table->remove(3);
-    table->remove(1);
+    table->remove(13);
+    table->remove(2);
+    table->remove(16);
 
     table->reset();
     for (size_t i = 0; i < table->getCount(); i++)

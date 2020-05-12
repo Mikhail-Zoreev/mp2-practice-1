@@ -47,10 +47,11 @@ HashTable<TKey, TData>::HashTable(size_t size_)
         records[i] = nullptr;
     }
     //Нахождение взаимно простого mixing_ratio
-    for (size_t i = this->size; i < 0; i--)
+    mixing_ratio = 1;
+    for (size_t i = 2; i < this->size; i++)
     {
         bool found = false;
-        for (size_t j = 2; j < i; j++)
+        for (size_t j = 2; j <= i; j++)
         {
             if ((this->size % j == 0) && (i % j == 0))
             {
@@ -61,7 +62,7 @@ HashTable<TKey, TData>::HashTable(size_t size_)
         if (!found)
         {
             mixing_ratio = i;
-            break;
+            return;
         }
     }
 }
@@ -119,6 +120,7 @@ void HashTable<TKey, TData>::remove(TKey key)
         delete temp->data;
         temp->data = nullptr;
         temp->key = 0;
+        this->count--;
     }
 }
 
